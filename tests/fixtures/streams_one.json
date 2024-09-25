@@ -1,0 +1,60 @@
+{
+  "camera.12mp_fluent": {
+    "producers": [
+      {
+        "id": 2,
+        "format_name": "rtsp",
+        "protocol": "rtsp+tcp",
+        "remote_addr": "192.168.10.105:554",
+        "url": "rtsp://test:test@192.168.10.105:554/Preview_06_sub",
+        "sdp": "v=0\r\no=- 1726963235657063 1 IN IP4 172.16.25.1\r\ns=Session streamed by \"preview\"\r\ni=Preview_06_sub\r\nt=0 0\r\na=tool:BC Streaming Media v2022.02.07\r\na=type:broadcast\r\na=control:*\r\na=range:npt=now-\r\na=x-qt-text-nam:Session streamed by \"preview\"\r\na=x-qt-text-inf:Preview_06_sub\r\nm=video 0 RTP/AVP 96\r\nc=IN IP4 0.0.0.0\r\nb=AS:500\r\na=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1;profile-level-id=640033;sprop-parameter-sets=Z2QAM6wVFKDgEGQ=,aO48sA==\r\na=framerate:25.000\r\na=control:trackID=1\r\nm=audio 0 RTP/AVP 97\r\nc=IN IP4 0.0.0.0\r\nb=AS:256\r\na=rtpmap:97 MPEG4-GENERIC/16000\r\na=fmtp:97 streamtype=5;profile-level-id=15;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1408; profile=1;\r\na=framerate:25.000\r\na=control:trackID=2\r\n",
+        "user_agent": "go2rtc/1.9.4",
+        "medias": [
+          "video, recvonly, H264",
+          "audio, recvonly, MPEG4-GENERIC/16000"
+        ],
+        "receivers": [
+          {
+            "id": 3,
+            "codec": {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "level": 51,
+              "profile": "High"
+            },
+            "childs": [4],
+            "bytes": 1714455,
+            "packets": 1255
+          }
+        ],
+        "bytes_recv": 1729659
+      }
+    ],
+    "consumers": [
+      {
+        "id": 1,
+        "format_name": "webrtc/json",
+        "protocol": "http+udp",
+        "remote_addr": "192.168.10.20:44460 prflx",
+        "user_agent": "HomeAssistant/2024.10.0.dev0 aiohttp/3.10.5 Python/3.12",
+        "medias": [
+          "video, sendonly, VP8, VP9, H264",
+          "audio, sendonly, OPUS/48000/2, G722/8000, PCMU/8000, PCMA/8000, L16, PCML"
+        ],
+        "senders": [
+          {
+            "id": 4,
+            "codec": {
+              "codec_name": "h264",
+              "codec_type": "video"
+            },
+            "parent": 3,
+            "bytes": 1714455,
+            "packets": 1255
+          }
+        ],
+        "bytes_send": 1733057
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+# serializer version: 1
+# name: test_streams_get[empty]
+  dict({
+  })
+# ---
+# name: test_streams_get[one stream]
+  dict({
+    'camera.12mp_fluent': dict({
+      'producers': list([
+        dict({
+          'url': 'rtsp://test:test@192.168.10.105:554/Preview_06_sub',
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_webrtc_offer
+  dict({
+    'sdp': 'v=0...',
+    'type': 'answer',
+  })
+# ---
