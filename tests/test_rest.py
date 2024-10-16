@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from aiohttp.hdrs import METH_PUT
 import pytest
 
-from go2rtc_client.client import _StreamClient, _WebRTCClient
 from go2rtc_client.models import WebRTCSdpOffer
+from go2rtc_client.rest import _StreamClient, _WebRTCClient
 from tests import load_fixture
 
 from . import URL
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from aioresponses import aioresponses
     from syrupy import SnapshotAssertion
 
-    from go2rtc_client import Go2RtcClient
+    from go2rtc_client import Go2RtcRestClient
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 )
 async def test_streams_get(
     responses: aioresponses,
-    client: Go2RtcClient,
+    rest_client: Go2RtcRestClient,
     snapshot: SnapshotAssertion,
     filename: str,
 ) -> None:
@@ -43,13 +43,13 @@ async def test_streams_get(
         status=200,
         body=load_fixture(filename),
     )
-    resp = await client.streams.list()
+    resp = await rest_client.streams.list()
     assert resp == snapshot
 
 
 async def test_streams_add(
     responses: aioresponses,
-    client: Go2RtcClient,
+    rest_client: Go2RtcRestClient,
 ) -> None:
     """Test add stream."""
     url = f"{URL}{_StreamClient.PATH}"
@@ -62,7 +62,7 @@ async def test_streams_add(
         + "?name=camera.12mp_fluent&src=rtsp://test:test@192.168.10.105:554/Preview_06_sub",
         status=200,
     )
-    await client.streams.add(
+    await rest_client.streams.add(
         "camera.12mp_fluent", "rtsp://test:test@192.168.10.105:554/Preview_06_sub"
     )
 
@@ -71,7 +71,7 @@ async def test_streams_add(
 
 async def test_webrtc_offer(
     responses: aioresponses,
-    client: Go2RtcClient,
+    rest_client: Go2RtcRestClient,
     snapshot: SnapshotAssertion,
 ) -> None:
     """Test webrtc offer."""
@@ -81,7 +81,7 @@ async def test_webrtc_offer(
         status=200,
         body=load_fixture("webrtc_answer.json"),
     )
-    resp = await client.webrtc.forward_whep_sdp_offer(
+    resp = await rest_client.webrtc.forward_whep_sdp_offer(
         camera,
         WebRTCSdpOffer("v=0..."),
     )

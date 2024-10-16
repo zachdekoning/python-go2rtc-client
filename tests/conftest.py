@@ -7,7 +7,7 @@ from aioresponses import aioresponses
 import pytest
 from syrupy import SnapshotAssertion
 
-from go2rtc_client import Go2RtcClient
+from go2rtc_client import Go2RtcRestClient
 
 from . import URL
 from .syrupy import Go2RtcSnapshotExtension
@@ -20,12 +20,12 @@ def snapshot_assertion(snapshot: SnapshotAssertion) -> SnapshotAssertion:
 
 
 @pytest.fixture
-async def client() -> AsyncGenerator[Go2RtcClient, None]:
-    """Return a go2rtc client."""
+async def rest_client() -> AsyncGenerator[Go2RtcRestClient, None]:
+    """Return a go2rtc rest client."""
     async with (
         aiohttp.ClientSession() as session,
     ):
-        client_ = Go2RtcClient(
+        client_ = Go2RtcRestClient(
             session,
             URL,
         )

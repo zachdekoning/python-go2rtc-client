@@ -1,6 +1,7 @@
 """go2rtc client."""
 
-from .client import Go2RtcClient
+from . import ws
 from .models import Stream, WebRTCSdpAnswer, WebRTCSdpOffer
+from .rest import Go2RtcRestClient
 
-__all__ = ["Go2RtcClient", "Stream", "WebRTCSdpAnswer", "WebRTCSdpOffer"]
+__all__ = ["Go2RtcRestClient", "Stream", "WebRTCSdpAnswer", "WebRTCSdpOffer", "ws"]
