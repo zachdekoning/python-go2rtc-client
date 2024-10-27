@@ -7,12 +7,13 @@ from typing import TYPE_CHECKING, Any, Final, Literal
 
 from aiohttp import ClientError, ClientResponse, ClientSession
 from aiohttp.client import _RequestOptions
+from awesomeversion import AwesomeVersion
 from mashumaro.codecs.basic import BasicDecoder
 from mashumaro.mixins.dict import DataClassDictMixin
 from yarl import URL
 
 from .exceptions import handle_error
-from .models import Stream, WebRTCSdpAnswer, WebRTCSdpOffer
+from .models import ApplicationInfo, Stream, WebRTCSdpAnswer, WebRTCSdpOffer
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -20,6 +21,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 _API_PREFIX = "/api"
+_SUPPORTED_VERSION: Final = AwesomeVersion("1.9.4")
 
 
 class _BaseClient:
@@ -56,6 +58,19 @@ class _BaseClient:
 
         resp.raise_for_status()
         return resp
+
+
+class _ApplicationClient:
+    PATH: Final = _API_PREFIX
+
+    def __init__(self, client: _BaseClient) -> None:
+        """Initialize Client."""
+        self._client = client
+
+    async def get_info(self) -> ApplicationInfo:
+        """Get application info."""
+        resp = await self._client.request("GET", self.PATH)
+        return ApplicationInfo.from_dict(await resp.json())
 
 
 class _WebRTCClient:
@@ -123,5 +138,11 @@ class Go2RtcRestClient:
     def __init__(self, websession: ClientSession, server_url: str) -> None:
         """Initialize Client."""
         self._client = _BaseClient(websession, server_url)
+        self.application: Final = _ApplicationClient(self._client)
         self.streams: Final = _StreamClient(self._client)
         self.webrtc: Final = _WebRTCClient(self._client)
+
+    async def validate_server_version(self) -> bool:
+        """Validate the server version is compatible."""
+        application_info = await self.application.get_info()
+        return application_info.version == _SUPPORTED_VERSION
