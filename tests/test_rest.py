@@ -150,7 +150,7 @@ async def test_version_supported(
     server_version: str,
     expected_result: AbstractContextManager[Any],
 ) -> None:
-    """Test webrtc offer."""
+    """Test validate server version."""
     payload = json.loads(load_fixture("application_info_answer.json"))
     payload["version"] = server_version
     responses.get(
@@ -159,7 +159,8 @@ async def test_version_supported(
         payload=payload,
     )
     with expected_result:
-        await rest_client.validate_server_version()
+        version = await rest_client.validate_server_version()
+        assert version == AwesomeVersion(server_version)
 
 
 async def test_webrtc_offer(
